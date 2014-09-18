@@ -1,0 +1,2 @@
+django_board/board/migrations/*
+django_board/django_board/__pycache__/*
