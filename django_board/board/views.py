@@ -10,7 +10,7 @@ class MainBoardPage(FormView):
     template_name = 'board/main.html'
 
     form_class = ThreadForm
-    success_url = reverse_lazy('b:main')
+    success_url = reverse_lazy('board:main')
 
     def get_context_data(self, **kwargs):
         context = super(MainBoardPage, self).get_context_data(**kwargs)
