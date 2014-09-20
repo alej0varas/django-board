@@ -21,8 +21,9 @@
 
             <div class="op-post">
                 <p class="post-info">
-                    <strong>{{ thread.subj }}</strong><br>
-                    {{thread.name }} {{ thread.pub_date }} №{{ thread.id }}
+                    <strong>{{ thread.subj }}</strong>
+                    <a href="{% url 'board:thread' thread.id %}">[ Reply ]</a><br>
+                    {{ thread.name }} {{ thread.pub_date }} №{{ thread.id }}
                 </p>
                 <p class="post-text">
                     {{ thread.text }}
@@ -35,7 +36,7 @@
                     {% for reply in thread.reply_set.all %}
                         <div class="reply">
                             <p class="post-info">
-                                {{ thread.subj }}<br>
+                                <strong>{{ reply.subj }}</strong><br>
                                 {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
                             </p>
                             <p class="post-text">
