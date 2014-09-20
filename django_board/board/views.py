@@ -1,6 +1,7 @@
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from vanilla import FormView
 
@@ -22,6 +23,16 @@ class MainBoardPage(FormView):
     def get(self, request, *args, **kwargs):
         form = self.get_form()
         context = self.get_context_data(form=form)
+
+        paginator = Paginator(context['threads'], 10)
+        page = request.GET.get('page')
+        try:
+            context['threads'] = paginator.page(page)
+        except PageNotAnInteger:
+            context['threads'] = paginator.page(1)
+        except EmptyPage:
+            context['threads'] = paginator.page(paginator.num_pages)
+
         return(self.render_to_response(context))
 
     def post(self, request):

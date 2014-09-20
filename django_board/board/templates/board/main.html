@@ -21,9 +21,9 @@
 
             <div class="op-post">
                 <p class="post-info">
-                    <strong>{{ thread.subj }}</strong>
-                    <a href="{% url 'board:thread' thread.id %}">[ Reply ]</a><br>
+                    <strong>{{ thread.subj }}</strong><br>
                     {{ thread.name }} {{ thread.pub_date }} №{{ thread.id }}
+                    <a href="{% url 'board:thread' thread.id %}">[Reply]</a>
                 </p>
                 <p class="post-text">
                     {{ thread.text }}
@@ -52,6 +52,22 @@
         {% empty %}
         <h1>No threads yet.</h1>
         {% endfor %}
+
+        <div class="pagination">
+            <span class="step-links">
+                {% if threads.has_previous %}
+                    <a href="?page={{ threads.previous_page_number }}">previous</a>
+                {% endif %}
+
+                <span class="current">
+                    Page {{ threads.number }} of {{ threads.paginator.num_pages }}.
+                </span>
+
+                {% if threads.has_next %}
+                    <a href="?page={{ threads.next_page_number }}">next</a>
+                {% endif %}
+            </span>
+        </div>
 
     </body>
 </html>
