@@ -1,0 +1,49 @@
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <h3><a href="{% url 'board:main' %}">[ Return ]</a></h3>
+        <h3>New Reply</h3>
+        <div id="post-form">
+            <form method="POST" action="{{ action }}">
+                {% csrf_token %}
+                <ul>
+                    {{ form.as_ul }}
+                </ul>
+                <input type="submit" value="Create">
+            </form>
+        </div>
+
+        <div class="thread">
+            
+            <div class="op-post">
+                <p class="post-info">
+                    <strong>{{ thread.subj }}</strong><br>
+                    {{ thread.name }} {{ thread.pub_date }} №{{ thread.id }}
+                </p>
+                <p class="post-text">
+                    {{ thread.text }}
+                </p>
+            </div>
+
+            {% if thread.reply_set.all %}
+                <div class="replies">
+                    
+                    {% for reply in thread.reply_set.all %}
+                        <div class="reply">
+                            <p class="post-info">
+                                <strong>{{ reply.subj }}</strong><br>
+                                {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
+                            </p>
+                            <p class="post-info">
+                                {{ reply.text }}
+                            </p>
+                        </div>
+                        {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </body>
+</html>
