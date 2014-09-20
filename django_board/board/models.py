@@ -41,6 +41,10 @@ class Thread(Post):
 
         super(Thread, self).save()
 
+    def get_absolute_url(self):
+        from django.core.urlresolvers import reverse
+        return(reverse('thread', args=[str(self.id)]))
+
 
 class Reply(Post):
     thread = models.ForeignKey(Thread)
