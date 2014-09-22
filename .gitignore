@@ -1,2 +1,4 @@
 django_board/board/migrations/*
 django_board/django_board/__pycache__/*
+django_board/board/__pycache__/*
+django_board/pics/*
