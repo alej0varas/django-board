@@ -4,10 +4,10 @@
     </head>
 
     <body>
-        <h3><a href="{% url 'board:main' %}">[ Return ]</a></h3>
+        <h3><a href="{% url 'board:main' %}">[Return]</a></h3>
         <h3>New Reply</h3>
         <div id="post-form">
-            <form method="POST" action="{{ action }}">
+            <form method="POST" action="{{ action }}" enctype="multipart/form-data">
                 {% csrf_token %}
                 <ul>
                     {{ form.as_ul }}
@@ -23,6 +23,13 @@
                     <strong>{{ thread.subj }}</strong><br>
                     {{ thread.name }} {{ thread.pub_date }} №{{ thread.id }}
                 </p>
+
+                {% if thread.pic %}
+                <div class="post-image">
+                    <img src="{{ thread.pic.url }}">
+                </div>
+                {% endif %}
+
                 <p class="post-text">
                     {{ thread.text }}
                 </p>
@@ -37,6 +44,13 @@
                                 <strong>{{ reply.subj }}</strong><br>
                                 {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
                             </p>
+
+                            {% if reply.pic %}
+                            <div class="post-image">
+                                <img src="{{ reply.pic.url }}">
+                            </div>
+                            {% endif %}
+
                             <p class="post-info">
                                 {{ reply.text }}
                             </p>

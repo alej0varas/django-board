@@ -7,8 +7,9 @@ class Post(models.Model):
     name = models.CharField(blank=True, default='Anonymous', max_length=70)
     subj = models.CharField(blank=True, max_length=200)
     text = models.TextField(max_length=3000)
-    pub_date = models.DateTimeField(auto_now_add=True)
 
+    pic = models.ImageField(upload_to='pics/', blank=True, null=True)
+    pub_date = models.DateTimeField(auto_now_add=True)
     id = models.IntegerField(primary_key=True)
 
     class Meta:
