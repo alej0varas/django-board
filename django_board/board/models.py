@@ -1,4 +1,6 @@
 from django.db import models
+from imagekit.models import ImageSpecField
+from imagekit.processors import ResizeToFit
 
 
 class Post(models.Model):
@@ -8,7 +10,12 @@ class Post(models.Model):
     subj = models.CharField(blank=True, max_length=200)
     text = models.TextField(max_length=3000)
 
-    pic = models.ImageField(upload_to='pics/', blank=True, null=True)
+    picture = models.ImageField(upload_to='pics/', blank=True, null=True)
+    picture_thumbnail = ImageSpecField(source='picture',
+                                       processors=[ResizeToFit(300, 300)],
+                                       format='JPEG',
+                                       options={'quality': 85})
+
     pub_date = models.DateTimeField(auto_now_add=True)
     id = models.IntegerField(primary_key=True)
 

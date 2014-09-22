@@ -7,11 +7,11 @@ class ThreadForm(forms.ModelForm):
 
     class Meta:
         model = Thread
-        fields = ['name', 'subj', 'text', 'pic']
+        fields = ['name', 'subj', 'text', 'picture']
 
 
 class ReplyForm(forms.ModelForm):
 
     class Meta:
         model = Reply
-        fields = ['name', 'subj', 'text', 'pic']
+        fields = ['name', 'subj', 'text', 'picture']

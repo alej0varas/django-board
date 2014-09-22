@@ -26,9 +26,11 @@
                     <a href="{% url 'board:thread' thread.id %}">[Reply]</a>
                 </p>
 
-                {% if thread.pic %}
+                {% if thread.picture %}
                 <div class="post-image">
-                    <img src="{{ thread.pic.url }}">
+                    <a href="{{ thread.picture.url }}">
+                        <img src="{{ thread.picture_thumbnail.url }}">
+                    </a>
                 </div>
                 {% endif %}
 
@@ -47,9 +49,11 @@
                                 {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
                             </p>
 
-                            {% if reply.pic %}
+                            {% if reply.picture %}
                             <div class="post-image">
-                                <img src="{{ reply.pic.url }}">
+                                <a href="{{ reply.picture.url }}">
+                                    <img src="{{ reply.picture_thumbnail.url }}">
+                                </a>
                             </div>
                             {% endif %}
 
