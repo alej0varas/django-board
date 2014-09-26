@@ -73,10 +73,14 @@ class ThreadView(FormView):
             new_reply.save()
             return(self.form_valid(form, pk=pk))
 
-        return(self.form_invalid(form))
+        return(self.form_invalid(form, pk=pk))
 
     def form_valid(self, form, pk, **kwargs):
         return(HttpResponseRedirect(self.get_success_url(pk=pk)))
+
+    def form_invalid(self, form, pk):
+        context = self.get_context_data(form=form, pk=pk)
+        return self.render_to_response(context)
 
     def get_success_url(self, pk, **kwargs):
         if self.success_url is None:
