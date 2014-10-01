@@ -17,7 +17,7 @@ class MainBoardPage(FormView):
 
     def get_context_data(self, **kwargs):
         context = super(MainBoardPage, self).get_context_data(**kwargs)
-        context['threads'] = Thread.objects.all().order_by('-pub_date')
+        context['threads'] = Thread.objects.all().order_by('-last_bumped')
         return(context)
 
     def get(self, request, *args, **kwargs):

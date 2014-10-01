@@ -30,12 +30,13 @@ class Post(models.Model):
 
 
 class Thread(Post):
+    last_bumped = models.DateTimeField(null=True, blank=True, default=None)
 
     def save(self, *args, **kwargs):
 
+        # manually incrementing post id
         if not self.id:
             self.id = 1
-
             if Thread.objects.all():
                 # for case there's at least one thread
                 # and at least one reply to compare with
@@ -44,9 +45,21 @@ class Thread(Post):
                     self.id = max(
                         Thread.objects.last().id,
                         Reply.objects.last().id,) + 1
-
                 else:
                     self.id = Thread.objects.last().id + 1
+
+        super(Thread, self).save()
+
+        # manually setting last_bumped value
+        if not self.last_bumped:
+            self.update_last_bumped()
+
+    def update_last_bumped(self):
+
+        if self.reply_set.last():  # if thread has at least one reply
+            self.last_bumped = self.reply_set.last().pub_date
+        else:
+            self.last_bumped = self.pub_date
 
         super(Thread, self).save()
 
@@ -75,3 +88,5 @@ class Reply(Post):
                 self.id = Thread.objects.last().id + 1
 
         super(Reply, self).save()
+
+        self.thread.update_last_bumped()
