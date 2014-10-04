@@ -33,7 +33,9 @@
                 {% endif %}
 
                 <p class="post-text">
-                    {{ thread.text }}
+                    {% autoescape off %}
+                        {{ thread.text|linebreaks }}
+                    {% endautoescape %}
                 </p>
             </div>
 
@@ -45,6 +47,10 @@
                             <p class="post-info">
                                 <strong>{{ reply.subj }}</strong><br>
                                 {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
+
+                                {% if reply.sage %}
+                                    <strong>SAGE</strong>
+                                {% endif %}
                             </p>
 
                             {% if reply.picture %}
@@ -56,7 +62,9 @@
                             {% endif %}
 
                             <p class="post-info">
-                                {{ reply.text }}
+                                {% autoescape off %}
+                                {{ reply.text|linebreaks }}
+                                {% endautoescape %}
                             </p>
                         </div>
                         {% endfor %}

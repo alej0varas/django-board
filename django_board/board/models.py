@@ -3,6 +3,8 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
+from . import text_processing
+
 
 class Post(models.Model):
     """Base class for both OP-posts and replies."""
@@ -54,12 +56,19 @@ class Thread(Post):
         if not self.last_bumped:
             self.update_last_bumped()
 
+        self.text = self.process_text()
+
     def update_last_bumped(self):
 
         if self.reply_set.last():  # if thread has at least one reply
             self.last_bumped = self.reply_set.last().pub_date
         else:
             self.last_bumped = self.pub_date
+
+        super(Thread, self).save()
+
+    def process_text(self):
+        self.text = text_processing.main(self.text)
 
         super(Thread, self).save()
 
@@ -70,6 +79,7 @@ class Thread(Post):
 
 class Reply(Post):
     thread = models.ForeignKey(Thread)
+    sage = models.BooleanField(blank=True, default=False)
 
     def save(self, *args, **kwargs):
 
@@ -89,4 +99,12 @@ class Reply(Post):
 
         super(Reply, self).save()
 
-        self.thread.update_last_bumped()
+        if not self.sage:
+            self.thread.update_last_bumped()
+
+        self.text = self.process_text()
+
+    def process_text(self):
+        self.text = text_processing.main(self.text)
+
+        super(Reply, self).save()

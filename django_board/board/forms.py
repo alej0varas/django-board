@@ -14,4 +14,4 @@ class ReplyForm(forms.ModelForm):
 
     class Meta:
         model = Reply
-        fields = ['name', 'subj', 'text', 'picture']
+        fields = ['name', 'subj', 'sage', 'text', 'picture']
