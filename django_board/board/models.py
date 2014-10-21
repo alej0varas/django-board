@@ -3,7 +3,7 @@ from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
-from . import text_processing
+from text_markup import markup
 
 
 class Post(models.Model):
@@ -56,7 +56,7 @@ class Thread(Post):
         if not self.last_bumped:
             self.update_last_bumped()
 
-        self.text = self.process_text()
+        self.text = self.format_text()
 
     def update_last_bumped(self):
 
@@ -67,8 +67,8 @@ class Thread(Post):
 
         super(Thread, self).save()
 
-    def process_text(self):
-        self.text = text_processing.main(self.text)
+    def format_text(self):
+        self.text = markup.get_markup(self.text)
 
         super(Thread, self).save()
 
@@ -102,9 +102,9 @@ class Reply(Post):
         if not self.sage:
             self.thread.update_last_bumped()
 
-        self.text = self.process_text()
+        self.text = self.format_text()
 
-    def process_text(self):
-        self.text = text_processing.main(self.text)
+    def format_text(self):
+        self.text = markup.get_markup(self.text)
 
         super(Reply, self).save()
