@@ -3,7 +3,7 @@ import re
 
 def make_formatter_by_regex(pattern, repl, text, flags=0):
     def formatter():
-        formatted_text = re.sub(pattern, repl, text)
+        formatted_text = re.sub(pattern, repl, text, flags=flags)
         return(formatted_text)
     return(formatter)
 
@@ -31,6 +31,20 @@ def format_bold(text):
 def format_emphasized(text):
     formatter = make_formatter_by_regex('\*(?P<emphasized>[^\*]+)\*',  # *EM*
                                        '<em>\g<emphasized></em>', text)
+    return(formatter())
+
+
+def format_underline(text):
+    formatter = make_formatter_by_regex(
+        '__(?P<underlined>.+?(?=__))__',  # __underlined__
+        '<u>\g<underlined></u>', text, flags=re.DOTALL)
+    return(formatter())
+
+
+def format_strikethrough(text):
+    formatter = make_formatter_by_regex(
+        '~~(?P<strikethrough>.+?(?=~~))~~',
+        '<del>\g<strikethrough></del>', text, flags=re.DOTALL)
     return(formatter())
 
 

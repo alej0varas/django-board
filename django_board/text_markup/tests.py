@@ -2,6 +2,8 @@ import unittest
 from .formatters import (
     format_bold,
     format_emphasized,
+    format_underline,
+    format_strikethrough,
     format_quotes,
     format_inline_code,
     format_multiline_code,
@@ -62,6 +64,38 @@ class EmphasizedTextTests(unittest.TestCase):
         self.assertEqual(
             text,
             "<em>emphasized\nemphasized\nemphasized</em>")
+
+
+class UnderlineTextTests(unittest.TestCase):
+    """Underline text formatting tests."""
+
+    def test_whole_line_underlined(self):
+        text = format_underline("__underlined text__")
+        self.assertEqual(text, "<u>underlined text</u>")
+
+    def test_inline_underline(self):
+        text = format_underline("normal __underlined__ normal")
+        self.assertEqual(text, "normal <u>underlined</u> normal")
+
+    def test_multiline_underline(self):
+        text = format_underline("__line 1\nline 2\nline 3__")
+        self.assertEqual(text, "<u>line 1\nline 2\nline 3</u>")
+
+
+class StrikethroughTests(unittest.TestCase):
+    """Strikethrough text formatting tests."""
+
+    def test_whole_line_strikethrough(self):
+        text = format_strikethrough("~~strikethrough~~")
+        self.assertEqual(text, "<del>strikethrough</del>")
+
+    def test_inline_strikethrough(self):
+        text = format_strikethrough("normal ~~strikethrough~~ normal")
+        self.assertEqual(text, "normal <del>strikethrough</del> normal")
+
+    def test_multiline_strikethrough(self):
+        text = format_strikethrough("~~line 1\nline 2\nline 3~~")
+        self.assertEqual(text, "<del>line 1\nline 2\nline 3</del>")
 
 
 class InlineCodeTests(unittest.TestCase):

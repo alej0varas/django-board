@@ -2,6 +2,8 @@ from .safe_html import escape_html
 from .formatters import (
     format_bold,
     format_emphasized,
+    format_underline,
+    format_strikethrough,
     format_quotes,
     format_inline_code,
     format_multiline_code,
@@ -11,6 +13,8 @@ from .formatters import (
 DEFAULT_FORMATTERS = [
     format_bold,
     format_emphasized,
+    format_underline,
+    format_strikethrough,
     format_quotes,
     format_multiline_code,  # Don't use code formatting in different order!
     format_inline_code,     # It may cause bugs.
