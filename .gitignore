@@ -1,4 +1,8 @@
 django_board/board/migrations/*
+django_board/db.sqlite3
+
 django_board/django_board/__pycache__/*
 django_board/board/__pycache__/*
+django_board/text_markup/__pycache/*
+
 django_board/pics/*
