@@ -7,6 +7,9 @@ from .formatters import (
     format_quotes,
     format_inline_code,
     format_multiline_code,
+    format_spoilers,
+    format_hyphens_to_dashes,
+    escape_formatting,
 )
 
 
@@ -28,8 +31,8 @@ class QuotesTests(unittest.TestCase):
         self.assertEqual(text, quoted_text)
 
     def test_wrongly_quoted_text(self):
-        text = format_quotes("&gt;quote\nsome text &gt; quote")
-        self.assertEqual(text, "&gt;quote\nsome text &gt; quote")
+        text = format_quotes("some text &gt; quote")
+        self.assertEqual(text, "some text &gt; quote")
 
 
 class BoldTextTests(unittest.TestCase):
@@ -117,21 +120,105 @@ class InlineCodeTests(unittest.TestCase):
 
 
 class MultilineCodeTests(unittest.TestCase):
-    """Monospaced text formatting tests. Uses ``multi-line text``."""
+    """Monospaced text formatting tests. Uses ```multi-line text```."""
 
     def test_code_only(self):
-        text = format_multiline_code("``line 1\nline 2\nline 3``")
+        text = format_multiline_code("```line 1\nline 2\nline 3```")
 
         self.assertEqual(text,
                          "<pre><code>line 1\nline 2\nline 3</code></pre>")
 
     def test_code_with_other_text(self):
         text = format_multiline_code(
-            "normal text ``multi-line\ncode`` normal text")
+            "normal text ```multi-line\ncode``` normal text")
 
         self.assertEqual(
             text,
             "normal text <pre><code>multi-line\ncode</code></pre> normal text")
+
+
+class SpoilersTests(unittest.TestCase):
+    """Spoilered text tests."""
+
+    def test_spoiler_only(self):
+        text = format_spoilers('%%spoiler%%')
+        self.assertEqual(text, '<span class="spoiler">spoiler</span>')
+
+    def test_inline_spoiler(self):
+        text = format_spoilers('normal %%spoilered%% normal')
+        self.assertEqual(
+            text,
+            'normal <span class="spoiler">spoilered</span> normal')
+
+    def test_multiline_spoiler(self):
+        text = format_spoilers('%%line 1\nline 2\nline 3%%')
+        self.assertEqual(
+            text,
+            '<span class="spoiler">line 1\nline 2\nline 3</span>')
+
+
+class HyphensToDashesTests(unittest.TestCase):
+    """Tests for converting hyphens surrounded by spaces to dashes."""
+
+    def test_hyphen_surrounded_by_spaces(self):
+        text = format_hyphens_to_dashes("to - dash")
+        self.assertEqual(text, "to — dash")
+
+    def test_hyphen_at_beginning_of_line(self):
+        text = format_hyphens_to_dashes("- to dash")
+        self.assertEqual(text, "— to dash")
+
+    def test_hyphen_at_end_of_line(self):
+        text = format_hyphens_to_dashes("to dash -")
+        self.assertEqual(text, "to dash —")
+
+    def test_single_hyphen(self):
+        text = format_hyphens_to_dashes("-")
+        self.assertEqual(text, "—")
+
+    def test_hyphen_between_two_chars(self):
+        text = format_hyphens_to_dashes("a-b")
+        self.assertEqual(text, "a-b")
+
+
+class EscapingTests(unittest.TestCase):
+    """Tests for escaping characters and avoiding formatting."""
+
+    def test_escaping_quotes(self):
+        text = escape_formatting('\>escaped quote')
+        self.assertEqual(text, '>escaped quote')
+
+    def test_escaping_bold(self):
+        text = escape_formatting('\*\*not bold\*\*')
+        self.assertEqual(text, '**not bold**')
+
+    def test_escaping_emphasized(self):
+        text = escape_formatting('\*not emphasized\*')
+        self.assertEqual(text, '*not emphasized*')
+
+    def test_escaping_underlined(self):
+        text = escape_formatting('\_\_not underlined\_\_')
+        self.assertEqual(text, '__not underlined__')
+
+    def test_escaping_strikethrough(self):
+        text = escape_formatting('\~\~not strikethrough\~\~')
+        self.assertEqual(text, '~~not strikethrough~~')
+
+    def test_escaping_inline_code(self):
+        text = escape_formatting('\`not monospaced\`')
+        self.assertEqual(text, '`not monospaced`')
+
+    def test_escaping_multiline_code(self):
+        text = escape_formatting('\`\`\`not\nmultiline code\`\`\`')
+        self.assertEqual(text, '```not\nmultiline code```')
+
+    def test_escaping_spoilers(self):
+        text = escape_formatting('\%\%not spoiler\%\%')
+        self.assertEqual(text, '%%not spoiler%%')
+
+    def test_escaping_hyphens(self):
+        text = escape_formatting('a \- b')
+        self.assertEqual(text, 'a - b')
 
 
 if __name__ == '__main__':

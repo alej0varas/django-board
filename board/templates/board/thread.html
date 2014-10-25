@@ -1,6 +1,10 @@
 <html>
     <head>
         <title></title>
+
+        {% load staticfiles %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'board/style.css' %}" />
     </head>
 
     <body>
@@ -17,7 +21,7 @@
         </div>
 
         <div class="thread">
-            
+
             <div class="op-post">
                 <p class="post-info">
                     <strong>{{ thread.subj }}</strong><br>
@@ -41,7 +45,7 @@
 
             {% if thread.reply_set.all %}
                 <div class="replies">
-                    
+
                     {% for reply in thread.reply_set.all %}
                         <div class="reply">
                             <p class="post-info">

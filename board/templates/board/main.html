@@ -1,10 +1,14 @@
 <html>
     <head>
         <title></title>
+
+        {% load staticfiles %}
+
+        <link rel="stylesheet" type="text/css" href="{% static 'board/style.css' %}" />
     </head>
 
     <body>
-        
+
         <h3>New Thread</h3>
         <div id="post-form">
             <form method="POST" action="{{ action }}" enctype="multipart/form-data">
