@@ -2,7 +2,7 @@ import re
 
 
 ESCAPING_TABLE = [
-    ('\>', '>'),
+    ('\&gt;', '&gt;'),
     ('\*', '*'),
     ('\`', '`'),
     ('\_', '_'),
@@ -39,8 +39,9 @@ def format_bold(text):
 
 
 def format_emphasized(text):
-    formatter = make_formatter_by_regex('\*(?P<emphasized>[^\*]+)\*',  # *EM*
-                                        '<em>\g<emphasized></em>', text)
+    formatter = make_formatter_by_regex(
+        r"(?P<before>([^\\]|\A))\*(?P<emphasized>[^\*]+)\*",  # *EM*
+        '\g<before><em>\g<emphasized></em>', text)
     return(formatter())
 
 
@@ -82,7 +83,7 @@ def format_spoilers(text):
 def format_hyphens_to_dashes(text):
     formatter = make_formatter_by_regex(
         '(?P<before>\s|\A)-(?P<after>\s|\Z)',  # "a - a" or "- a"
-        '\g<before>—\g<after>', text)
+        '\g<before>–\g<after>', text)  # fd
     return(formatter())
 
 

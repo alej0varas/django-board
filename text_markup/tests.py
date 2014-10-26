@@ -181,12 +181,12 @@ class HyphensToDashesTests(unittest.TestCase):
         self.assertEqual(text, "a-b")
 
 
-class EscapingTests(unittest.TestCase):
+class BasicEscapingTests(unittest.TestCase):
     """Tests for escaping characters and avoiding formatting."""
 
     def test_escaping_quotes(self):
-        text = escape_formatting('\>escaped quote')
-        self.assertEqual(text, '>escaped quote')
+        text = escape_formatting('\&gt;escaped quote')
+        self.assertEqual(text, '&gt;escaped quote')
 
     def test_escaping_bold(self):
         text = escape_formatting('\*\*not bold\*\*')
@@ -219,6 +219,49 @@ class EscapingTests(unittest.TestCase):
     def test_escaping_hyphens(self):
         text = escape_formatting('a \- b')
         self.assertEqual(text, 'a - b')
+
+
+class ComplexEscapingTests(unittest.TestCase):
+    """Complex and mixed tests for escaping characters."""
+
+    def test_escape_bold_and_emphasized_text(self):
+        text = escape_formatting("\*\*\*not bold nor emphasized\*\*\*")
+        self.assertEqual(text, "***not bold nor emphasized***")
+
+    def test_escape_bold_and_underlined_text(self):
+        text = escape_formatting("\_\_\*\*not bold nor underlined\*\*\_\_")
+        self.assertEqual(text, "__**not bold nor underlined**__")
+
+    def test_escape_bold_and_strikedthrough_text(self):
+        text = escape_formatting("\~\~\*\*not bold nor strikedthrough\*\*\~\~")
+        self.assertEqual(text, "~~**not bold nor strikedthrough**~~")
+
+    def test_escape_bold_inline_code(self):
+        text = escape_formatting("\`\*\*not bold code\*\*\`")
+        self.assertEqual(text, "`**not bold code**`")
+
+    def test_escape_bold_multiline_code(self):
+        text = escape_formatting("\`\`\`\*\*not bold code\*\*\`\`\`")
+        self.assertEqual(text, "```**not bold code**```")
+
+    def test_escape_bold_spoilered_text(self):
+        text = escape_formatting("\%\%\*\*not bold spoiler\*\*\%\%")
+        self.assertEqual(text, "%%**not bold spoiler**%%")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':
