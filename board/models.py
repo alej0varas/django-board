@@ -56,7 +56,7 @@ class Thread(Post):
         if not self.last_bumped:
             self.update_last_bumped()
 
-        self.text = self.format_text()
+        self.format_text()
 
     def update_last_bumped(self):
 
