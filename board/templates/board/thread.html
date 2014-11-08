@@ -22,10 +22,10 @@
 
         <div class="thread">
 
-            <div class="op-post">
+            <div class="op-post" id="{{ thread.id }}">
                 <p class="post-info">
                     <strong>{{ thread.subj }}</strong><br>
-                    {{ thread.name }} {{ thread.pub_date }} №{{ thread.id }}
+                    {{ thread.name }} {{ thread.pub_date }} <a href="#{{ thread.id }}">№{{ thread.id }}</a>
                 </p>
 
                 {% if thread.picture %}
@@ -36,26 +36,28 @@
                 </div>
                 {% endif %}
 
-                <p class="post-text">
+                <div class="post-text">
+                    <p>
                     {% autoescape off %}
-                        {{ thread.text|linebreaks }}
+                        {{ thread.text|linebreaksbr|urlize }}
                     {% endautoescape %}
-                </p>
+                    </p>
+                </div>
             </div>
 
             {% if thread.reply_set.all %}
                 <div class="replies">
 
                     {% for reply in thread.reply_set.all %}
-                        <div class="reply">
-                            <p class="post-info">
+                        <div class="reply" id="{{ reply.id }}">
+                            <div class="post-info">
                                 <strong>{{ reply.subj }}</strong><br>
-                                {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
+                                {{ reply.name }} {{ reply.pub_date }} <a href="#{{ reply.id }}">№{{ reply.id }}</a>
 
                                 {% if reply.sage %}
                                     <strong>SAGE</strong>
                                 {% endif %}
-                            </p>
+                            </div>
 
                             {% if reply.picture %}
                             <div class="post-image">
@@ -65,13 +67,15 @@
                             </div>
                             {% endif %}
 
-                            <p class="post-info">
+                            <div class="post-text">
+                                <p>
                                 {% autoescape off %}
-                                {{ reply.text|linebreaks }}
+                                    {{ reply.text|linebreaksbr|urlize }}
                                 {% endautoescape %}
-                            </p>
+                                </p>
+                            </div>
                         </div>
-                        {% endfor %}
+                    {% endfor %}
                 </div>
             {% endif %}
         </div>

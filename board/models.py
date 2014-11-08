@@ -4,6 +4,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
 from text_markup import markup
+from text_markup.formatters import format_references
 
 
 class Post(models.Model):
@@ -69,12 +70,13 @@ class Thread(Post):
 
     def format_text(self):
         self.text = markup.get_markup(self.text)
+        self.text = format_references(self.text)
 
         super(Thread, self).save()
 
     def get_absolute_url(self):
         from django.core.urlresolvers import reverse
-        return(reverse('thread', args=[str(self.id)]))
+        return(reverse('board:thread', kwargs={'pk': str(self.id)}))
 
 
 class Reply(Post):
@@ -102,9 +104,10 @@ class Reply(Post):
         if not self.sage:
             self.thread.update_last_bumped()
 
-        self.text = self.format_text()
+        self.format_text()
 
     def format_text(self):
         self.text = markup.get_markup(self.text)
+        self.text = format_references(self.text)
 
         super(Reply, self).save()

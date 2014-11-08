@@ -162,19 +162,19 @@ class HyphensToDashesTests(unittest.TestCase):
 
     def test_hyphen_surrounded_by_spaces(self):
         text = format_hyphens_to_dashes("to - dash")
-        self.assertEqual(text, "to — dash")
+        self.assertEqual(text, "to – dash")
 
     def test_hyphen_at_beginning_of_line(self):
         text = format_hyphens_to_dashes("- to dash")
-        self.assertEqual(text, "— to dash")
+        self.assertEqual(text, "– to dash")
 
     def test_hyphen_at_end_of_line(self):
         text = format_hyphens_to_dashes("to dash -")
-        self.assertEqual(text, "to dash —")
+        self.assertEqual(text, "to dash –")
 
     def test_single_hyphen(self):
         text = format_hyphens_to_dashes("-")
-        self.assertEqual(text, "—")
+        self.assertEqual(text, "–")
 
     def test_hyphen_between_two_chars(self):
         text = format_hyphens_to_dashes("a-b")
@@ -247,21 +247,6 @@ class ComplexEscapingTests(unittest.TestCase):
     def test_escape_bold_spoilered_text(self):
         text = escape_formatting("\%\%\*\*not bold spoiler\*\*\%\%")
         self.assertEqual(text, "%%**not bold spoiler**%%")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 if __name__ == '__main__':

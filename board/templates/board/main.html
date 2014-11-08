@@ -23,13 +23,11 @@
         {% for thread in threads %}
         <div class="thread">
 
-            <div class="op-post">
+            <div class="op-post" id="{{ thread.id }}">
                 <div class="post-info">
-                    <p>
                     <strong>{{ thread.subj }}</strong><br>
-                    {{ thread.name }} {{ thread.pub_date }} №{{ thread.id }}
+                    {{ thread.name }} {{ thread.pub_date }} <a href="{{ thread.id }}/#{{ thread.id }}">№{{ thread.id }}</a>
                     <a href="{% url 'board:thread' thread.id %}">[Reply]</a>
-                    </p>
                 </div>
 
                 {% if thread.picture %}
@@ -53,16 +51,14 @@
                 <div class="replies">
 
                     {% for reply in thread.reply_set.all %}
-                        <div class="reply">
+                        <div class="reply" id="{{ reply.id }}">
                             <div class="post-info">
-                                <p>
                                 <strong>{{ reply.subj }}</strong><br>
-                                {{ reply.name }} {{ reply.pub_date }} №{{ reply.id }}
+                                {{ reply.name }} {{ reply.pub_date }} <a href="{{ thread.id }}/#{{ reply.id }}">№{{ reply.id }}</a>
 
                                 {% if reply.sage %}
                                     <strong>SAGE</strong>
                                 {% endif %}
-                                </p>
                             </div>
 
                             {% if reply.picture %}

@@ -19,8 +19,8 @@ DEFAULT_FORMATTERS = [
     format_underline,
     format_strikethrough,
     format_quotes,
-    format_multiline_code,  # Don't use code formatting in different order!
-    format_inline_code,     # It may cause bugs.
+    format_multiline_code,
+    format_inline_code,
     format_spoilers,
     format_hyphens_to_dashes,
     escape_formatting,
