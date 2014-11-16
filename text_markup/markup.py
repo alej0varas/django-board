@@ -1,5 +1,5 @@
 from .safe_html import escape_html
-from .formatters import (
+from .basic_formatters import (
     format_bold,
     format_emphasized,
     format_underline,
@@ -11,7 +11,6 @@ from .formatters import (
     format_hyphens_to_dashes,
     escape_formatting,
 )
-
 
 DEFAULT_FORMATTERS = [
     format_bold,

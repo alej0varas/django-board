@@ -4,7 +4,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFit
 
 from text_markup import markup
-from text_markup.formatters import format_references
+from text_markup.special_formatters import format_references
 
 
 class Post(models.Model):

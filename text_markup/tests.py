@@ -1,5 +1,5 @@
 import unittest
-from .formatters import (
+from .basic_formatters import (
     format_bold,
     format_emphasized,
     format_underline,

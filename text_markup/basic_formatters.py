@@ -1,11 +1,6 @@
 import re
 
 
-from django.core.exceptions import ObjectDoesNotExist
-
-
-import board.models
-
 ESCAPING_TABLE = [
     ('\&gt;', '&gt;'),
     ('\*', '*'),
@@ -91,35 +86,6 @@ def format_hyphens_to_dashes(text):
         '(?P<before>\s|\A)-(?P<after>\s|\Z)',  # "a - a" or "- a"
         '\g<before>–\g<after>', text)  # fd
     return(formatter())
-
-
-def format_references(text):
-    referenced_text = text[:]
-
-    for match in re.findall('&gt;&gt;\d+', text):
-        ref = int(match[8:])  # saving referenced post's id
-
-        try:
-            thread = board.models.Thread.objects.get(id=ref)
-            thread_url = thread.get_absolute_url()
-            ref_url = thread_url + '#' + str(ref)  # final reference url
-
-            repl = '<a href="{}">{}</a>'.format(ref_url, match)
-            referenced_text = referenced_text.replace(match, repl)
-
-        except ObjectDoesNotExist:
-            try:
-                reply = board.models.Reply.objects.get(id=ref)
-                thread_url = reply.thread.get_absolute_url()
-                ref_url = thread_url + '#' + str(ref)
-
-                repl = '<a href="{}">{}</a>'.format(ref_url, match)
-                referenced_text = referenced_text.replace(match, repl)
-
-            except ObjectDoesNotExist:
-                pass
-
-    return(referenced_text)
 
 
 def escape_formatting(text):

@@ -5,7 +5,7 @@ from django.core.files.base import ContentFile
 
 from PIL import Image
 
-from .models import Thread, Reply
+from .models import Thread
 
 
 def create_temporary_picture(size=(100, 100),
@@ -62,6 +62,17 @@ class ThreadModelTests(TestCase):
 
         self.assertEqual(thread2.id, thread1.id + 1)
 
+    def test_thread_to_thread_referencing(self):
+        thread1 = Thread.objects.create(text="thread 1")
+        thread2 = Thread.objects.create(text=">>{}".format(str(thread1.id)))
+
+        expected_url = '<a href="{}">{}</a>'.format(
+            thread1.get_absolute_url() + '#' + str(thread1.id),
+            '&gt;&gt;' + str(thread1.id)
+        )
+
+        self.assertEqual(thread2.text, expected_url)
+
 
 class ReplyModelTests(TestCase):
     """Tests for the Reply model."""
@@ -74,7 +85,7 @@ class ReplyModelTests(TestCase):
         reply_text = "Reply to the " + thread_text
         reply = thread.reply_set.create(text=reply_text)
 
-        self.assertEqual(thread.reply_set.last().text, reply_text)
+        self.assertEqual(thread.reply_set.last(), reply)
         self.assertEqual(thread.reply_set.last().id, thread.id + 1)
 
     def test_create_thread_and_reply_with_picture(self):
@@ -88,3 +99,26 @@ class ReplyModelTests(TestCase):
         reply_pic.seek(0)
 
         self.assertEqual(reply.picture.read(), reply_pic.read())
+
+    def test_reply_to_thread_referencing(self):
+        thread = Thread.objects.create(text="A thread to reply to.")
+        reply = thread.reply_set.create(text=">>{}".format(str(thread.id)))
+
+        expected_url = '<a href="{}">{}</a>'.format(
+            thread.get_absolute_url() + '#' + str(thread.id),
+            '&gt;&gt;' + str(thread.id)
+        )
+
+        self.assertEqual(reply.text, expected_url)
+
+    def test_reply_to_reply_referencing(self):
+        thread = Thread.objects.create(text="text")
+        reply1 = thread.reply_set.create(text="...")
+        reply2 = thread.reply_set.create(text=">>{}".format(str(reply1.id)))
+
+        expected_url = '<a href="{}">{}</a>'.format(
+            thread.get_absolute_url() + '#' + str(reply1.id),
+            '&gt;&gt;' + str(reply1.id)
+        )
+
+        self.assertEqual(reply2.text, expected_url)
