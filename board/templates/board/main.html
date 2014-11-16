@@ -50,7 +50,13 @@
             {% if thread.reply_set.all %}
                 <div class="replies">
 
-                    {% for reply in thread.reply_set.all %}
+                {% if thread.reply_set.count > 5 %}
+                <h6>Only 5 of {{ thread.reply_set.count }} replies are shown.
+                    Click <a href="{% url 'board:thread' thread.id %}">here</a> to see more.</h6>
+                {% endif %}
+
+                    {% for reply in thread.get_last_replies %}
+
                         <div class="reply" id="{{ reply.id }}">
                             <div class="post-info">
                                 <strong>{{ reply.subj }}</strong><br>

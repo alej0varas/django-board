@@ -78,6 +78,9 @@ class Thread(Post):
         from django.core.urlresolvers import reverse
         return(reverse('board:thread', kwargs={'pk': str(self.id)}))
 
+    def get_last_replies(self, amount=5):
+        return(self.reply_set.order_by('-id')[:amount:-1])
+
 
 class Reply(Post):
     thread = models.ForeignKey(Thread)
