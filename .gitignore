@@ -6,3 +6,5 @@ django_board/db.sqlite3
 django_board/pics/*
 
 django_board.egg-info
+build
+dist
