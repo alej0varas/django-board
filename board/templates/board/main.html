@@ -1,21 +1,21 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load bootstrap_tags %}
 
 {% block heading %}
 
 <div class="jumbotron">
-
   <h2>New Thread</h2>
+  <form>
 
-  <div id="post-form">
-    <form method="POST" action="{{ action }}" enctype="multipart/form-data">
     {% csrf_token %}
-      <ul>
-      {{ form.as_ul }}
-      </ul>
-      <input class="btn btn-default" type="submit" value="Create" />
-    </form>
-  </div>
+
+    {{ form|as_bootstrap }}
+
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">Poost!</button>
+    </div>
+  </form>
 </div><!--/.jumbotron -->
 
 {% endblock heading %}
@@ -26,7 +26,7 @@
 
 {% for thread in threads %}
 
-  <div class="col-xs-6 col-lg-6">
+  <div class="col-xs-12 col-sm-6 col-md-4">
     <h2>{{ thread.subj }}</h2>
     <p><strong>{{ thread.name }}</strong> {{ thread.pub_date }} <a href="{{ thread.id }}/#{{ thread.id }}">№{{ thread.id }}</a></p>
     <p>
@@ -46,7 +46,7 @@
     </p>
 
     <p><a href="{% url 'board:thread' thread.id %}" class="btn btn-default" role="button">Reply &raquo;</a></p>
-  </div><!--/.col-xs-6.col-lg-4-->
+  </div><!--/.col-xs-12.col-sm-6.col-md-4-->
 
 {% empty %}
 
