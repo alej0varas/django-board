@@ -1,113 +1,134 @@
-<html>
-    <head>
-        <title></title>
+{% extends "base.html" %}
+{% load staticfiles %}
 
-        {% load staticfiles %}
+{% block heading %}
 
-        <link rel="stylesheet" type="text/css" href="{% static 'board/style.css' %}" />
-    </head>
+<div class="jumbotron">
 
-    <body>
+  <h2>New Thread</h2>
 
-        <h3>New Thread</h3>
-        <div id="post-form">
-            <form method="POST" action="{{ action }}" enctype="multipart/form-data">
-                {% csrf_token %}
-                <ul>
-                    {{ form.as_ul }}
-                </ul>
-                <input type="submit" value="Create">
-            </form>
+  <div id="post-form">
+    <form method="POST" action="{{ action }}" enctype="multipart/form-data">
+    {% csrf_token %}
+      <ul>
+      {{ form.as_ul }}
+      </ul>
+      <input class="btn btn-default" type="submit" value="Create" />
+    </form>
+  </div>
+</div><!--/.jumbotron -->
+
+{% endblock heading %}
+
+{% block content %}
+
+<div class="row">
+
+{% for thread in threads %}
+
+  <div class="col-xs-6 col-lg-6">
+    <h2>{{ thread.subj }}</h2>
+    <p><strong>{{ thread.name }}</strong> {{ thread.pub_date }} <a href="{{ thread.id }}/#{{ thread.id }}">№{{ thread.id }}</a></p>
+    <p>
+
+    {% if thread.picture %}
+
+    <a href="{{ thread.picture.url }}">
+      <img src="{{ thread.picture_thumbnail.url }}" />
+    </a>
+
+    {% endif %}
+    </p>
+    <p>
+    {% autoescape off %}
+    {{ thread.text|linebreaksbr|urlize }}
+    {% endautoescape %}
+    </p>
+
+    <p><a href="{% url 'board:thread' thread.id %}" class="btn btn-default" role="button">Reply &raquo;</a></p>
+  </div><!--/.col-xs-6.col-lg-4-->
+
+{% empty %}
+
+<h1>No threads yet.</h1>
+
+{% endfor %}
+
+</div><!--/row-->
+
+{% comment %}
+
+  {% if thread.reply_set.all %}
+  <div class="replies">
+
+    {% if thread.reply_set.count > 5 %}
+
+    <h6>Only 5 of {{ thread.reply_set.count }} replies are shown.
+    Click <a href="{% url 'board:thread' thread.id %}">here</a> to see more.</h6>
+
+    {% endif %}
+
+    {% for reply in thread.get_last_replies %}
+
+    <div class="reply" id="{{ reply.id }}">
+      <div class="post-info">
+        <strong>{{ reply.subj }}</strong><br>
+        {{ reply.name }} {{ reply.pub_date }} <a href="{{ thread.id }}/#{{ reply.id }}">№{{ reply.id }}</a>
+
+        {% if reply.sage %}
+
+        <strong>SAGE</strong>
+
+        {% endif %}
+      </div>
+
+      {% if reply.picture %}
+      
+      <div class="post-image">
+        <a href="{{ reply.picture.url }}">
+          <img src="{{ reply.picture_thumbnail.url }}" />
+        </a>
+      </div>
+
+      {% endif %}
+
+      <div class="post-text">
+        <p>
+          {% autoescape off %}
+          {{ reply.text|linebreaksbr|urlize }}
+          {% endautoescape %}
+        </p>
+      </div>
+    </div>
+
+    {% endfor %}
+
         </div>
 
-        {% for thread in threads %}
-        <div class="thread">
+        {% endif %}
 
-            <div class="op-post" id="{{ thread.id }}">
-                <div class="post-info">
-                    <strong>{{ thread.subj }}</strong><br>
-                    {{ thread.name }} {{ thread.pub_date }} <a href="{{ thread.id }}/#{{ thread.id }}">№{{ thread.id }}</a>
-                    <a href="{% url 'board:thread' thread.id %}">[Reply]</a>
-                </div>
 
-                {% if thread.picture %}
-                <div class="post-image">
-                    <a href="{{ thread.picture.url }}">
-                        <img src="{{ thread.picture_thumbnail.url }}">
-                    </a>
-                </div>
-                {% endif %}
+        
+</div>
 
-                <div class="post-text">
-                    <p>
-                    {% autoescape off %}
-                        {{ thread.text|linebreaksbr|urlize }}
-                    {% endautoescape %}
-                    </p>
-                </div>
-            </div>
+<hr />
 
-            {% if thread.reply_set.all %}
-                <div class="replies">
+<div class="pagination">
+  <span class="step-links">
+    {% if threads.has_previous %}
+    <a href="?page={{ threads.previous_page_number }}">previous</a>
+    {% endif %}
+    
+    <span class="current">
+      Page {{ threads.number }} of {{ threads.paginator.num_pages }}.
+    </span>
+    
+    {% if threads.has_next %}
+    <a href="?page={{ threads.next_page_number }}">next</a>
+    {% endif %}
+  </span>
+</div>
 
-                {% if thread.reply_set.count > 5 %}
-                <h6>Only 5 of {{ thread.reply_set.count }} replies are shown.
-                    Click <a href="{% url 'board:thread' thread.id %}">here</a> to see more.</h6>
-                {% endif %}
+{% endcomment %}
 
-                    {% for reply in thread.get_last_replies %}
-
-                        <div class="reply" id="{{ reply.id }}">
-                            <div class="post-info">
-                                <strong>{{ reply.subj }}</strong><br>
-                                {{ reply.name }} {{ reply.pub_date }} <a href="{{ thread.id }}/#{{ reply.id }}">№{{ reply.id }}</a>
-
-                                {% if reply.sage %}
-                                    <strong>SAGE</strong>
-                                {% endif %}
-                            </div>
-
-                            {% if reply.picture %}
-                            <div class="post-image">
-                                <a href="{{ reply.picture.url }}">
-                                    <img src="{{ reply.picture_thumbnail.url }}">
-                                </a>
-                            </div>
-                            {% endif %}
-
-                            <div class="post-text">
-                                <p>
-                                {% autoescape off %}
-                                    {{ reply.text|linebreaksbr|urlize }}
-                                {% endautoescape %}
-                                </p>
-                            </div>
-                        </div>
-                    {% endfor %}
-                </div>
-            {% endif %}
-
-        </div><hr />
-
-        {% empty %}
-        <h1>No threads yet.</h1>
-        {% endfor %}
-
-        <div class="pagination">
-            <span class="step-links">
-                {% if threads.has_previous %}
-                    <a href="?page={{ threads.previous_page_number }}">previous</a>
-                {% endif %}
-
-                <span class="current">
-                    Page {{ threads.number }} of {{ threads.paginator.num_pages }}.
-                </span>
-
-                {% if threads.has_next %}
-                    <a href="?page={{ threads.next_page_number }}">next</a>
-                {% endif %}
-            </span>
-        </div>
-
-    </body>
-</html>
+{% endblock content %}
